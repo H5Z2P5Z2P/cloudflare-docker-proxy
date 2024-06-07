@@ -3,19 +3,30 @@ addEventListener("fetch", (event) => {
   event.respondWith(handleRequest(event.request));
 });
 
+function extractSubdomainFromHost(host) {
+    const regex = /^([^.]+)\./;
+    const matches = regex.exec(host);
+    if (matches && matches.length >= 2) {
+        return matches[1];
+    } else {
+        return null;
+    }
+}
+
 const routes = {
-  "docker.epen.xyz": "https://registry-1.docker.io",
-  "quay.epen.xyz": "https://quay.io",
-  "gcr.epen.xyz": "https://gcr.io",
-  "k8s-gcr.epen.xyz": "https://k8s.gcr.io",
-  "k8s.epen.xyz": "https://registry.k8s.io",
-  "ghcr.epen.xyz": "https://ghcr.io",
-  "cloudsmith.epen.xyz": "https://docker.cloudsmith.io",
+  "docker": "https://registry-1.docker.io",
+  "quay": "https://quay.io",
+  "gcr": "https://gcr.io",
+  "k8s-gcr": "https://k8s.gcr.io",
+  "k8s": "https://registry.k8s.io",
+  "ghcr": "https://ghcr.io",
+  "cloudsmith": "https://docker.cloudsmith.io",
 };
 
 function routeByHosts(host) {
   if (host in routes) {
-    return routes[host];
+    const subdomain = extractSubdomainFromHost(host)
+    return routes[subdomain];
   }
   if (MODE == "debug") {
     return TARGET_UPSTREAM;

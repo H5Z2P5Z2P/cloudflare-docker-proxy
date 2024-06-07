@@ -24,8 +24,8 @@ const routes = {
 };
 
 function routeByHosts(host) {
-  if (host in routes) {
-    const subdomain = extractSubdomainFromHost(host)
+  const subdomain = extractSubdomainFromHost(host)
+  if (subdomain in routes) {
     return routes[subdomain];
   }
   if (MODE == "debug") {
